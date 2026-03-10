@@ -4,17 +4,13 @@ RUN apk add --no-cache git
 RUN CGO_ENABLED=0 go install tailscale.com/cmd/derper@latest
 
 FROM alpine:3.19
-RUN apk add --no-cache ca-certificates
+RUN apk add --no-cache ca-certificates openssl
+
 COPY --from=builder /go/bin/derper /usr/local/bin/derper
 
-ENV PORT=8080
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
 
 EXPOSE 8080
 
-CMD derper \
-    --hostname=127.0.0.1 \
-    --http-port=${PORT} \
-    --stun=false \
-    --verify-clients=false \
-    --a=:${PORT} \
-    --certmode=manual
+CMD ["/start.sh"]
