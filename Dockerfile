@@ -1,4 +1,4 @@
-FROM golang:1.22-alpine AS builder
+FROM golang:alpine AS builder
 
 RUN apk add --no-cache git
 RUN CGO_ENABLED=0 go install tailscale.com/cmd/derper@latest
